@@ -49,5 +49,4 @@ spring:
     password: pakar123
     hikari:
       connectionTimeout: 20000
-      maximumPoolSize: 5 
- 
+      maximumPoolSize: 5
