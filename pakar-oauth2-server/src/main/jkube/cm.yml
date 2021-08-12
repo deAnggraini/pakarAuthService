@@ -1,0 +1,86 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pakar-oauth-server
+data:
+  application.properties: |-
+
+    server.tomcat.max-connections=102400
+    server.tomcat.max-threads=250
+    server.tomcat.min-spare-threads=10
+
+    spring.datasource.type=com.zaxxer.hikari.HikariDataSource
+    spring.datasource.jdbc-url=jdbc:postgresql://36.89.25.220:5432/pakardb3
+    spring.datasource.username=pakar
+    spring.datasource.password=pakar123
+    spring.datasource.xa.data-source-class-name=com.impossibl.postgres.jdbc.xa.PGXADataSource
+    spring.datasource.platform=postgresql
+    spring.datasource.minimumIdle=10
+    spring.datasource.maximumPoolSize=15
+    spring.datasource.idleTimeout=10000
+    spring.datasource.leak-detection-threshold=720000
+    spring.datasource.maxLifetime=360000
+    spring.datasource.connectionTimeout=360000
+    spring.datasource.connectionInitSql=select 1
+    spring.datasource.connectionTestQuery=select 1
+    spring.datasource.pool-prepared-statements=true
+    spring.datasource.max-open-prepared-statements=250
+    spring.datasource.auto-commit=true
+    spring.datasource.poolName=PortalApiPool
+
+    datasource.schema=${DATABASE_SCHEMA}
+
+  loggers-include.xml: |+
+    <included>
+        <appender name="STDOUT"
+          class="ch.qos.logback.core.ConsoleAppender">
+          <encoder>
+            <pattern>%d{dd-MM-yyyy HH:mm:ss.SSS, Asia/Jakarta} [%thread] %-5level %logger{36}-%M:%L - %msg%n</pattern>
+          </encoder>
+        </appender>
+
+        <appender name="SAVE-TO-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+          <file>/deployments/logs/portalapi.log</file>
+            <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+                <pattern>%d{dd-MM-yyyy HH:mm:ss.SSS, Asia/Jakarta} [%thread] %-5level %logger{36}-%M:%L - %msg%n</pattern>
+            </encoder>
+            <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+                <fileNamePattern>
+                    /deployments/logs/portalapi.%d{yyyy-MM-dd}.%i.log
+                </fileNamePattern>
+                <!-- each archived file, size max 10MB -->
+                <maxFileSize>20MB</maxFileSize>
+                  <!-- total size of all archive files, if total size > 20GB, it will delete old archived file -->
+                  <totalSizeCap>1000MB</totalSizeCap>
+                  <!-- 60 days to keep -->
+                  <maxHistory>60</maxHistory>
+            </rollingPolicy>
+        </appender>
+
+
+
+        <logger name="org.springframework.boot" level="info" additivity="false">
+          <appender-ref ref="STDOUT" />
+          <appender-ref ref="SAVE-TO-FILE" />
+        </logger>
+
+        <logger name="org.apache.ibatis" level="info" additivity="false">
+          <appender-ref ref="STDOUT" />
+          <appender-ref ref="SAVE-TO-FILE" />
+        </logger>
+
+        <logger name="id.co.bca.pakar.be.oauth2" level="info" additivity="false">
+          <appender-ref ref="STDOUT" />
+          <appender-ref ref="SAVE-TO-FILE" />
+        </logger>
+
+        <logger name="com.zaxxer.hikari" additivity="false" level="info">
+          <appender-ref ref="STDOUT" />
+          <appender-ref ref="SAVE-TO-FILE" />
+        </logger>
+
+        <root level="info">
+          <appender-ref ref="STDOUT" />
+          <appender-ref ref="SAVE-TO-FILE" />
+        </root>
+    </included>

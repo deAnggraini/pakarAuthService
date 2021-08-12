@@ -170,7 +170,7 @@
 		<profile>
 			<id>openshift</id>
 			<build>
-				<finalName>pakar-oauth2-server</finalName>
+				<finalName>pakar-oauth-server</finalName>
 				<plugins>
 					<plugin>
 						<groupId>org.eclipse.jkube</groupId>

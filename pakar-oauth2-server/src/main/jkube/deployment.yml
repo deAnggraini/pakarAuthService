@@ -1,0 +1,68 @@
+#
+# Copyright (c) 2019 Red Hat, Inc.
+# This program and the accompanying materials are made
+# available under the terms of the Eclipse Public License 2.0
+# which is available at:
+#
+#     https://www.eclipse.org/legal/epl-2.0/
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+# Contributors:
+#   Red Hat, Inc. - initial API and implementation
+#
+
+
+spec:
+  replicas: 3
+  template:
+    spec:
+      containers:
+        - name: pakar-oauth-server
+          env:
+            - name: KUBERNETES_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.namespace
+            - name: SPRING_PROFILES_ACTIVE
+              value: dev-ogya
+            - name: SPRING_DATASOURCE_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgre2-secret
+                  key: database.username
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgre2-secret
+                  key: database.password
+            - name: DATABASE_HOST
+              value: 36.89.25.220
+            - name: DATABASE_PORT
+              value: 5435
+            - name: DATABASE_SCHEMA
+              value: pakar3
+            - name: JAVA_TOOL_OPTIONS
+              value: '-Xms8G -Xmx16G -XX:+UseParallelGC '
+          volumeMounts:
+            - name: application-config
+              mountPath: "/deployments/config"
+              readOnly: true
+          resources:
+            limits:
+              cpu: "4.0"
+              memory: 16Gi
+            requests:
+              cpu: "2.0"
+              memory: 8Gi
+      volumes:
+        - name: application-config
+          configMap:
+            name: portal-java-api-config
+            items:
+              - key: application.properties
+                path: application.properties
+              - key: loggers-include.xml
+                path: loggers-include.xml
+
