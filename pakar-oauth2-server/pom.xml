@@ -11,7 +11,7 @@
 	</parent>
 	<groupId>id.co.bca.pakar.be.oauth2</groupId>
 	<artifactId>pakar-oauth2-server</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0</version>
 	<name>pakar-oauth2-server</name>
 	<description>PAKAR AUTHORIZATION SERVER USING OAUTH2 AND SPRING BOOT 2.5.0</description>
 
